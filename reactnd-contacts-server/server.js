@@ -1,4 +1,5 @@
 const express = require("express");
+const { Sequelize, DataTypes, Model } = require("sequelize");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const config = require("./config");
@@ -9,6 +10,35 @@ const app = express();
 
 app.use(express.static("public"));
 app.use(cors());
+
+const sequelize = new Sequelize(
+  'postgres://postgres:Jc.PSql159@database-1.c0iw87d0utum.us-east-1.rds.amazonaws.com:5432/postgres'
+);
+
+class User extends Model {}
+
+User.init(
+  {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+    },
+    avatarURL: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
+    sequelize,
+    modelName: "User",
+  }
+);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/client/index.html"));
